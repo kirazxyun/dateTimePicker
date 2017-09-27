@@ -2,7 +2,7 @@
   <div :class="[prefixCls]" :style="styles">
     <div :class="[prefixCls + '-trigger']"  @mouseenter.stop="handleHover" @mouseleave.stop="handleLeave" @click="handleTriggerClick">
         <i :class="[prefixCls + '-input-icon']" v-show="!showDelete"><Icon type="calendar"></Icon></i>
-        <i :class="[prefixCls + '-input-icon']" v-show="showDelete" @click="handleDelete"><Icon type="close-circled"></Icon></i>
+        <i :class="[prefixCls + '-input-icon']" v-show="showDelete" @click.stop="handleDelete"><Icon type="close-circled"></Icon></i>
         <input :class="[prefixCls + '-input']" v-model="formatSelectedDate" :placeholder="placeholder" readonly="readonly"/>
     </div>
     <div :class="[prefixCls + '-drop']" v-show="dropShow">
@@ -221,7 +221,6 @@ export default {
   		this.endDate = null;
   	},
   	handleTriggerClick (e) {
-  		if(this.showDelete) return;
   		this.dropShow = true;
   	},
   	getCellCls (cell) {

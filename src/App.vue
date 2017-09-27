@@ -30,7 +30,8 @@
       <Row align="middle">
         <Col span="12"><datetimepicker v-model="date1"
                                        :minDate="minDate" 
-                                       :maxDate="maxDate"></datetimepicker></Col>
+                                       :maxDate="maxDate"
+                                       :range="true"></datetimepicker></Col>
         <Col span="12">
           <span>当前选中的日期{{date1}}</span>
         </Col>
