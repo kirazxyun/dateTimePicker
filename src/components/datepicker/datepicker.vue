@@ -1,16 +1,16 @@
 <template>
   <div :class="[prefixCls]" :style="styles">
     <div :class="[prefixCls + '-trigger']"  @mouseenter.stop="handleHover" @mouseleave.stop="handleLeave" @click="handleTriggerClick">
-        <i :class="[prefixCls + '-input-icon', 'wsicon wsicon-calendar']" v-show="!showDelete"></i>
-        <i :class="[prefixCls + '-input-icon', 'wsicon wsicon-error']" v-show="showDelete" @click="handleDelete"></i>
+        <i :class="[prefixCls + '-input-icon']" v-show="!showDelete"><Icon type="calendar"></Icon></i>
+        <i :class="[prefixCls + '-input-icon']" v-show="showDelete" @click="handleDelete"><Icon type="close-circled"></Icon></i>
         <input :class="[prefixCls + '-input']" v-model="formatSelectedDate" :placeholder="placeholder" readonly="readonly"/>
     </div>
     <div :class="[prefixCls + '-drop']" v-show="dropShow">
       <div :class="[prefixCls + '-header']">
-          <span :class="[prefixCls + '-btn', prefixCls +'-pre-btn', 'wsicon wsicon-triangle-left']" @click="handlePreClick"></span>
+          <span :class="[prefixCls + '-btn', prefixCls +'-pre-btn']" @click="handlePreClick"><Icon type="chevron-left"></Icon></span>
           <span :class="[prefixCls + '-label']">{{ year }}年</span>
           <span :class="[prefixCls + '-label']">{{ month + 1 }}月</span>
-          <span :class="[prefixCls + '-btn', prefixCls + '-next-btn', 'wsicon wsicon-triangle-right']" @click="handleNextClick"></span>
+          <span :class="[prefixCls + '-btn', prefixCls + '-next-btn']" @click="handleNextClick"><Icon type="chevron-right"></Icon></span>
       </div>
       <div :class="[prefixCls + '-content']">
         <div :class="[prefixCls + '-table']">
@@ -221,7 +221,7 @@ export default {
   		this.endDate = null;
   	},
   	handleTriggerClick (e) {
-  		if(e.target.className.indexOf('error') > -1) return;
+  		if(this.showDelete) return;
   		this.dropShow = true;
   	},
   	getCellCls (cell) {

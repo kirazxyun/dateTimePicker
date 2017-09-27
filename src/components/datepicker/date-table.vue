@@ -2,11 +2,11 @@
   <div :class="[prefixCls]">
       <dateTableHeader></dateTableHeader>
       <cell v-for="(cell, index) in cells" 
-            :selected="cellSelected(index)" 
-            :disabled="cellDisabled(index)"
+            :selected="cell.selected" 
+            :disabled="cell.disabled"
             :type="cell.type"
             :text="cell.text"
-            @click="handleCellClick(index)"></cell>
+            @click.native="handleCellClick(index)"></cell>
   </div>
 </template>
 
@@ -26,30 +26,41 @@ export default {
 
   props: {
   	year: {
-  		type: Number
+  		type: [Number, String]
   	},
   	month: {
-  		type: Number
+  		type:[Number, String]
   	},
     selectedDate: {
-      type: Date
+      type: [Date, Array]
     },
     today: {
       type: Date
+    },
+    minDate: {
+      type: Date,
+      default: null
+    },
+    maxDate: {
+      type: Date,
+      default: null
     }
   },
 
   data () {
     return {
-      prefixCls: prefixCls, //样式前缀
-    	cells: []
+      prefixCls: prefixCls //样式前缀
     };
   },
 
+  computed: {
+    cells() {
+      return this.getCells(this.year, this.month);
+    }
+  },
+
   methods: {
-    getCells () {
-      const year = this.year;
-      const month = this.month;
+    getCells (year, month) {
       const firstDayOfMonth = new Date(year, month, 1).getDay(); //当月的第一天是星期几
       const lastDateOfMonth = new Date(year, month + 1, 0).getDate(); //当月的最后一天
       const lastDateOfLastMonth = new Date(year, month, 0).getDate(); //上个月的最后一天
@@ -66,7 +77,9 @@ export default {
           day: lastDateOfLastMonth - len,
           year: prevYear,
           month: prevMonth,
-          type: 'prev-month'
+          type: 'prev-month',
+          selected: this.cellSelected(prevYear, prevMonth, lastDateOfLastMonth - len),
+          disabled: this.cellDisabled(prevYear, prevMonth, lastDateOfLastMonth - len)
         });
       }
       for(let i = 1, len = lastDateOfMonth; i <= len; i++) {
@@ -75,7 +88,9 @@ export default {
           day: i,
           year: year,
           month: month,
-          type: false
+          type: this.cellToday(year, month, i) ? 'today' : '',
+          selected: this.cellSelected(year, month, i),
+          disabled: this.cellDisabled(year, month, i)
         });
       }
       for(let i = 0, len = 42 -  temp.length; i < len; i++) {
@@ -84,38 +99,44 @@ export default {
           day: i + 1,
           year: nextYear,
           month: nextMonth,
-          type: 'next-month'
+          type: 'next-month',
+          selected: this.cellSelected(nextYear, nextMonth, i + 1),
+          disabled: this.cellDisabled(nextYear, nextMonth, i + 1)
         })
       }
-      this.cells = temp;
+      return temp;
     },
 
-    cellSelected(index) {
+    cellSelected(...dateArg) {
+      if(this.selectedDate) {
+        const date = new Date(...dateArg);
+        if(this.selectedDate.length !== undefined) {
+          return date.getTime() >= this.selectedDate[0].getTime() && date.getTime() <= this.selectedDate[1].getTime();
+        }
+        return date.getTime() === this.selectedDate.getTime();
+      }
       return false;
     },
 
-    cellDisabled(index) {
-      let cell = this.cells[index];
-      if(cell.type === 'next-month' || cell.type === 'prev-month') {
-        return false;
+    cellDisabled(...dateArg) {
+      if(this.minDate && this.maxDate) {
+        const date = new Date(...dateArg);
+        const time = date.getTime();
+        if(this.minDate && time < this.minDate.getTime()) return true;
+        if(this.maxDate && time > this.maxDate.getTime()) return true;
       }
 
-      return true;
+      return false;
+    },
+
+    cellToday(...dateArg) {
+      const date = new Date(...dateArg);
+      return date.getTime() === this.today.getTime();
     },
 
     handleCellClick(index) {
       let cell = this.cells[index];
       this.$emit('cellclick', cell);
-    }
-  },
-
-  watch: {
-    year(val) {
-      this.getCells();
-    },
-
-    month(val) {
-      this.getCells();
     }
   },
 
@@ -125,7 +146,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .date-picker-table {
 	width: 220px;
 	margin: 10px;

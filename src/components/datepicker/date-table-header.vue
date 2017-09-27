@@ -13,7 +13,9 @@ export default {
   props: {
   	weeks: {
   		type: Array,
-  		default: ['日', '一', '二', '三', '四', '五', '六']
+  		default() {
+        return ['日', '一', '二', '三', '四', '五', '六'];
+      }
   	}
   },
 
@@ -39,5 +41,21 @@ export default {
     margin: 2px;
     color: #bbbec4;
   }
+}
+span, 
+span em {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+}
+span {
+    em {
+        line-height: 24px;
+        margin: 2px;
+        font-style: normal;
+        border-radius: 3px;
+        text-align: center;
+        transition: all .2s ease-in-out;
+    }
 }
 </style>

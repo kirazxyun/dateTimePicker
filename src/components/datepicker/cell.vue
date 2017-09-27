@@ -1,6 +1,6 @@
 <template>
 	<span :class="classes">
-  	<em>{{ cell.text }}</em>
+  	<em>{{ text }}</em>
   </span>
 </template>
 
@@ -12,7 +12,7 @@ export default {
 
   props: {
   	text: {
-  		type: String,
+  		type: [String, Number],
   		default: ''
   	},
   	selected: {
@@ -26,7 +26,11 @@ export default {
   	type: {
   		type: String,
   		default: ''
-  	}
+  	},
+    today: {
+      type: Boolean,
+      default: false
+    }
   },
 
   data () {
@@ -119,7 +123,7 @@ export default {
 .date-picker-table-cell-range {
 	em {
   	position: relative;
-    z-index: 1
+    z-index: 1;
     &:before {
     	content: "";
 	    display: block;
