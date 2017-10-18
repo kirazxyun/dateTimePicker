@@ -5,23 +5,38 @@
 							 :selected-date="formatDate(this.selectedDate)"
 							 :placeholder="placeholder"></trigger>
 	    <div :class="[prefixCls + '-drop']" v-show="dropShow">
-	      <div :class="[prefixCls + '-header']">
-	          <span :class="[prefixCls + '-btn', prefixCls +'-pre-btn']" 
-	          			@click="handlePreClick"><Icon type="chevron-left"></Icon></span>
-	          <span :class="[prefixCls + '-label']">{{ year }}年</span>
-	          <span :class="[prefixCls + '-label']">{{ month + 1 }}月</span>
-	          <span :class="[prefixCls + '-btn', prefixCls + '-next-btn']" 
-	          			@click="handleNextClick"><Icon type="chevron-right"></Icon></span>
-	      </div>
-	      <div :class="[prefixCls + '-content']">
-	      	<datetable @cellclick="handleCellClick"
-	      						 :selected-date="this.selectedDate"
-	      						 :year="year"
-	      						 :month="month"
-	      						 :today="today"
-	      						 :min-date="readDate(minDate)"
-	      						 :max-date="readDate(maxDate)"></datetable>
-	      </div>
+        <div :class="[prefixCls + '-panel']">
+          <div :class="[prefixCls + '-content', prefixCls + '-content-left']">
+            <div :class="[prefixCls + '-header']">
+              <span :class="[prefixCls + '-btn', prefixCls +'-pre-btn']" 
+                    @click="handlePreClick"><Icon type="chevron-left"></Icon></span>
+              <span :class="[prefixCls + '-label']">{{ year }}年</span>
+              <span :class="[prefixCls + '-label']">{{ month + 1 }}月</span>
+            </div>
+            <datetable @cellclick="handleCellClick"
+                       :selected-date="this.selectedDate"
+                       :year="year"
+                       :month="month"
+                       :today="today"
+                       :min-date="readDate(minDate)"
+                       :max-date="readDate(maxDate)"></datetable>
+          </div>
+          <div :class="[prefixCls + '-content', prefixCls + '-content-right']">
+            <div :class="[prefixCls + '-header']">
+              <span :class="[prefixCls + '-label']">{{ rYear }}年</span>
+              <span :class="[prefixCls + '-label']">{{ rMonth + 1 }}月</span>
+              <span :class="[prefixCls + '-btn', prefixCls + '-next-btn']" 
+                    @click="handleNextClick"><Icon type="chevron-right"></Icon></span>
+            </div>
+            <datetable @cellclick="handleCellClick"
+                       :selected-date="this.selectedDate"
+                       :year="rYear"
+                       :month="rMonth"
+                       :today="today"
+                       :min-date="readDate(minDate)"
+                       :max-date="readDate(maxDate)"></datetable>
+          </div>
+        </div>
 	    </div>
     </div>
 </template>
@@ -35,7 +50,7 @@ import trigger from './trigger';
 import datetable from './date-table';
 export default {
 
-  name: 'datetimepicker',
+  name: 'doubledatepicker',
 
   components: {
   	trigger,
@@ -89,7 +104,19 @@ export default {
   		return {
   			'display': 'inline-block'
 			};
-  	}
+  	},
+    rYear () {
+      if(this.month === 11) {
+        return this.year + 1;
+      }
+      return this.year;
+    },
+    rMonth () {
+      if(this.month === 11) {
+        return 0;
+      }
+      return this.month + 1;
+    }
   },
   methods: {
   	handleTriggerClick() {
@@ -217,7 +244,7 @@ export default {
     .date-picker-drop {
         position: absolute;
         z-index: 999;
-    		width: auto;
+    		width: 500px;
     		padding: 0;
     		overflow: visible;
     		max-height: none;
@@ -258,6 +285,14 @@ export default {
                 float: right;
                 margin-right: 10px;
             }
+        }
+
+        .date-picker-content-left {
+          float: left;
+        }
+
+        .date-picker-content-right {
+          float: left;
         }
     }
 }

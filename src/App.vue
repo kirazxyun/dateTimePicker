@@ -27,7 +27,7 @@
           <span>当前选中的日期{{rangeDate}}</span>
         </Col>
       </Row>
-      <Row align="middle">
+      <Row align="middle" style="height: 80px;">
         <Col span="12"><datetimepicker v-model="date1"
                                        :minDate="minDate" 
                                        :maxDate="maxDate"
@@ -36,23 +36,34 @@
           <span>当前选中的日期{{date1}}</span>
         </Col>
       </Row>
+      <Row align="middle" style="height: 80px;">
+        <Col span="12"><doubledatepicker v-model="date2"
+                                         :minDate="minDate" 
+                                         :maxDate="maxDate"
+                                         :range="true"></doubledatepicker></Col>
+        <Col span="12">
+          <span>当前选中的日期{{date2}}</span>
+        </Col>
+      </Row>
     </div>
   </div>
 </template>
 
 <script>
-import {datepicker, datetimepicker} from './components/datepicker';
+import {datepicker, datetimepicker, doubledatepicker} from './components/datepicker';
 
 export default {
   name: 'app',
   components: {
     datepicker,
-    datetimepicker
+    datetimepicker,
+    doubledatepicker
   },
   data () {
     return {
       date: '',
       date1: '',
+      date2: '',
       rangeDate: '',
       minDate: '2017-6-5',
       maxDate: '2017-12-12'
